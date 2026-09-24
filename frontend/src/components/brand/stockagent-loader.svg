@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="200" height="200" viewBox="0 0 200 200"
+     role="img" aria-label="StockAgent loading">
+
+  <defs>
+    <style>
+      /* ── Keyframes ────────────────────────────────────────────── */
+
+      /* NOTE: resting opacity raised .20 -> .42 vs the pristine asset in
+         public/brand/. At .20 the bolt read as near-blank for ~half of each
+         2s cycle — what made the indicator look invisible. The strike still
+         peaks at 1, so the "sequential strike" motion is unchanged.
+         Revert by setting the six .42 values back to .20. */
+
+      /* Upper bar: charges first (sharp 0.12s rise at 14%) */
+      @keyframes sa-upper {
+        0%,  14% { opacity: .42; }
+        20%      { opacity: 1;   }
+        55%      { opacity: 1;   }
+        67%      { opacity: .42; }
+        100%     { opacity: .42; }
+      }
+
+      /* Lower bar: strikes second (+0.28 s offset) */
+      @keyframes sa-lower {
+        0%,  28% { opacity: .42; }
+        34%      { opacity: 1;   }
+        57%      { opacity: 1;   }
+        69%      { opacity: .42; }
+        100%     { opacity: .42; }
+      }
+
+      /* Electric Blue (#2F6BFF) flash at peak strike — used sparingly */
+      @keyframes sa-flash {
+        0%,  51% { opacity: 0;   }
+        55%      { opacity: .55; }
+        63%      { opacity: 0;   }
+        100%     { opacity: 0;   }
+      }
+
+      /* Subtle 5% scale pulse at moment of full strike */
+      @keyframes sa-pulse {
+        0%,  50% { transform: scale(1);    }
+        55%      { transform: scale(1.05); }
+        63%      { transform: scale(1);    }
+        100%     { transform: scale(1);    }
+      }
+
+      /* ── Element rules ───────────────────────────────────────── */
+      .sa-u {
+        animation: sa-upper 2s linear infinite;
+      }
+      .sa-l {
+        animation: sa-lower 2s linear infinite;
+      }
+      .sa-g {
+        animation: sa-flash 2s linear infinite;
+      }
+      .sa-w {
+        animation: sa-pulse 2s linear infinite;
+        /* Scale from bolt centre (100,100) in the 200×200 SVG */
+        transform-origin: 100px 100px;
+      }
+    </style>
+  </defs>
+
+  <!-- Wrapper: receives the scale pulse, centred on bolt -->
+  <g class="sa-w">
+
+    <!--
+      Maps bolt content (9,8)→(47,76) onto the rectangle
+      (44.12, 0, 111.76, 200), bolt centre = (100,100).
+
+      The original asset does this with a NESTED <svg viewBox="9 8 38 68">.
+      That cannot be used here: SVGR spreads this component's props onto
+      every <svg> element it finds, so BrandLoader's width/height landed on
+      the inner one too, overriding its 111.76×200 and shrinking the bolt to
+      32% of its intended size. A <g transform> is geometrically identical
+      (scale 111.76/38 = 200/68 = 2.9410526) and nothing can override it.
+      public/brand/stockagent-loader.svg keeps the original nested form.
+    -->
+    <g transform="translate(44.12 0) scale(2.9410526) translate(-9 -8)">
+
+      <!-- Upper parallelogram bar — charges first -->
+      <polygon class="sa-u"
+               points="47,8 21,8 9,42 21,42 35,42"
+               fill="#FFFFFF"/>
+
+      <!-- Lower parallelogram bar — strikes second -->
+      <polygon class="sa-l"
+               points="35,42 21,42 9,76 35,76 47,42"
+               fill="#FFFFFF"/>
+
+      <!-- Electric Blue flash layer (full bolt, brief overlay) -->
+      <polygon class="sa-g"
+               points="47,8 21,8 9,42 21,42 9,76 35,76 47,42 35,42"
+               fill="#2F6BFF"/>
+
+    </g>
+  </g>
+
+</svg>

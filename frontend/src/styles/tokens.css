@@ -1,0 +1,35 @@
+/*
+ * StockAgent brand tokens — exact values from the brand system
+ * (FRONTEND_REACT.md §2). Do not approximate or substitute.
+ *
+ * --sa-accent is used sparingly: primary CTAs, active/selected states and
+ * the loader's flash moment only. Never a dominant UI color.
+ */
+:root {
+  --sa-black: #111111;    /* primary dark surface */
+  --sa-charcoal: #242424; /* secondary dark surface */
+  --sa-white: #FFFFFF;    /* light surface */
+  --sa-accent: #2F6BFF;   /* Electric Blue */
+
+  /* Ink and hairlines: translucent white over the brand blacks — no new hues. */
+  --ink-1: var(--sa-white);
+  --ink-2: rgba(255, 255, 255, 0.72);
+  --ink-3: rgba(255, 255, 255, 0.5);
+  --line: rgba(255, 255, 255, 0.1);
+  --line-strong: rgba(255, 255, 255, 0.18);
+  --wash: rgba(255, 255, 255, 0.04);
+  --wash-strong: rgba(255, 255, 255, 0.08);
+  --accent-wash: rgba(47, 107, 255, 0.14); /* --sa-accent at 14% */
+
+  /* Reserved status color — only ever paired with an icon + label. */
+  --status-critical: #d03b3b;
+
+  /* Typography: Space Grotesk (loaded in index.html, weights 400–700). */
+  --font-brand: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Code', Consolas, monospace;
+
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --header-h: 56px;
+}
