@@ -1,0 +1,28 @@
+# Keep the build context small and secrets out of the image.
+.env
+.env.*
+!.env.example
+
+.git
+.gitignore
+.venv
+venv/
+__pycache__/
+*.py[oc]
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+
+# node_modules and dist are rebuilt inside the frontend stage
+frontend/node_modules
+frontend/dist
+backend/static
+
+# Docs and assets that don't belong in a runtime image
+docs/
+brand_identity/
+*.md
+!requirements-deploy.txt
+
+*.log
+.DS_Store

@@ -1,7 +1,33 @@
 // TODO: replace with real authentication before any production launch.
-// Mirrors backend/deps.py's dev-only stub: every request claims this
-// placeholder user. It is NOT authentication — anyone can send any id.
-export const DEV_USER_ID = import.meta.env.VITE_USER_ID || '00000000-0000-0000-0000-000000000001'
+// Mirrors backend/deps.py's dev-only stub. It is NOT authentication — anyone
+// can send any id, and ids are not secret.
+const FALLBACK_USER_ID = '00000000-0000-0000-0000-000000000001'
+const STORAGE_KEY = 'stockagent.userId'
+
+/**
+ * A per-browser id, generated once and kept in localStorage.
+ *
+ * On a shared demo link a single hardcoded id would put every visitor in one
+ * account: everyone would see (and add to) everyone else's conversations.
+ * Giving each browser its own id keeps chat histories separate. Set
+ * VITE_USER_ID to pin a specific id instead.
+ */
+function resolveUserId(): string {
+  if (import.meta.env.VITE_USER_ID) return import.meta.env.VITE_USER_ID
+  try {
+    const existing = localStorage.getItem(STORAGE_KEY)
+    if (existing) return existing
+    // randomUUID needs a secure context (https or localhost) — fall back if absent.
+    const fresh = crypto.randomUUID?.() ?? FALLBACK_USER_ID
+    localStorage.setItem(STORAGE_KEY, fresh)
+    return fresh
+  } catch {
+    // Private mode or blocked site data: stay usable, just not separated.
+    return FALLBACK_USER_ID
+  }
+}
+
+export const DEV_USER_ID = resolveUserId()
 
 /** Headers shared by every request, across all three modes. */
 export function baseHeaders(): Record<string, string> {

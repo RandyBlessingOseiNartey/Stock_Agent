@@ -10,10 +10,12 @@ Run from the repo root:
 
 import os
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from .routers import chat, deep_research, terminal
 
@@ -65,3 +67,14 @@ app.include_router(chat.router)
 @app.get("/api/health")
 async def health():
     return {"status": "ok", "database": DATABASE_AVAILABLE}
+
+
+# In a deployed container the built frontend is copied to backend/static and
+# served from this same app, so the whole demo lives on one origin and CORS
+# never applies. In local development this folder doesn't exist — the Vite dev
+# server serves the UI and proxies /api to here — so the mount is skipped.
+# Mounted last: "/" would otherwise shadow the /api routes above.
+_STATIC_DIR = Path(__file__).parent / "static"
+if _STATIC_DIR.is_dir():
+    app.mount("/", StaticFiles(directory=_STATIC_DIR, html=True), name="static")
+    print(f"[startup] Serving the built frontend from {_STATIC_DIR}")
