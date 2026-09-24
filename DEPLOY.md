@@ -70,7 +70,7 @@ Why those flags:
 - `--max-instances 2` — a hard ceiling on spend if the link gets traffic.
 - `--allow-unauthenticated` — public demo, as intended.
 
-**Secrets:** `--set-env-vars` puts values in the service config. For anything
+**Secrets:** `--env-vars-file` puts values in the service config. For anything
 longer-lived use Secret Manager instead:
 
 ```bash

@@ -1,0 +1,33 @@
+# What NOT to upload to Cloud Build when running `gcloud run deploy --source .`
+# Without this, the 795MB .venv and frontend/node_modules get uploaded on every
+# deploy. The Dockerfile rebuilds both anyway.
+
+.git
+.gitignore
+.gcloudignore
+
+# Secrets — never upload
+.env
+.env.*
+!.env.example
+env.yaml
+
+# Local environments and caches
+.venv
+venv/
+__pycache__/
+*.py[oc]
+.ruff_cache/
+.pytest_cache/
+.mypy_cache/
+
+# Rebuilt inside the image
+frontend/node_modules
+frontend/dist
+backend/static
+
+# Not needed at runtime
+docs/
+brand_identity/
+*.log
+.DS_Store
